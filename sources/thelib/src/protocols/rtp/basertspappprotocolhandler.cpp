@@ -916,10 +916,15 @@ bool BaseRTSPAppProtocolHandler::HandleRTSPRequestAnnounce(RTSPProtocol *pFrom,
 	pFrom->GetCustomParameters()["isInbound"] = true;
 
 	//7. Save the streamName
-	string streamName = sdp.GetStreamName();
-	if (streamName == "") {
-		streamName = format("rtsp_stream_%u", pFrom->GetId());
+	URI uri;
+	if (!URI::FromString(requestHeaders[RTSP_FIRST_LINE][RTSP_URL], false, uri)) {
+		FATAL("Invalid URI: %s", STR(requestHeaders[RTSP_FIRST_LINE][RTSP_URL]));
+		return false;
 	}
+	string fullDocumentPathCaseSensitive = uri.fullDocumentPath();
+	std::size_t found = fullDocumentPathCaseSensitive.find_last_of("/");
+	string streamName = fullDocumentPathCaseSensitive.substr(found + 1);
+
 	pFrom->GetCustomParameters()["sdpStreamName"] = streamName;
 
 	//8. Save the bandwidth hint
