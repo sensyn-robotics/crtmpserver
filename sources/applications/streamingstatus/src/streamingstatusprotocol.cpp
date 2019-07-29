@@ -114,6 +114,7 @@ std::string StreamingStatusProtocol::GetStreamingStatusJSON()
             picojson::object info;
             info.insert(std::make_pair("name", picojson::value(s->GetName())));
             info.insert(std::make_pair("protocol", picojson::value(tagToString(p->GetType()))));
+            info.insert(std::make_pair("type", picojson::value((std::string)sv["type"])));
             info.insert(std::make_pair("upTime", picojson::value((double)sv["upTime"])));
             info.insert(std::make_pair("creationTimestamp", picojson::value((double)sv["creationTimestamp"])));
             streamingList.push_back(picojson::value(info));
