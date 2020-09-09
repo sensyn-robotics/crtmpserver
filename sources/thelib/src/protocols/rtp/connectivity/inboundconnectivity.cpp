@@ -210,8 +210,8 @@ bool InboundConnectivity::Initialize() {
 	if (_streamName == "")
 		_streamName = format("rtsp_%u", _pRTSP->GetId());
 	if (!pApplication->StreamNameAvailable(_streamName, _pRTSP)) {
-		FATAL("Stream name %s already taken", STR(_streamName));
-		return false;
+		INFO("Stream name %s already taken", STR(_streamName));
+		pApplication->GetStreamsManager()->UnRegisterStreams(_streamName, _pRTSP->GetId());
 	}
 	_pInStream = new InNetRTPStream(_pRTSP, _streamName, _videoTrack, _audioTrack,
 			bandwidth, _rtcpDetectionInterval);
